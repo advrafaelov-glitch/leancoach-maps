@@ -12,7 +12,7 @@ set -euo pipefail
 OUT=out
 WORK=work
 mkdir -p "$OUT" "$WORK"
-MAXZOOM=${MAXZOOM:-15}
+MAXZOOM=${MAXZOOM:-14}
 GEOFABRIK=https://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf
 
 # --- 1. OpenStreetMap data: one download from Geofabrik per build (their request:

@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
     inputs:
       maxzoom:
-        description: "Highest zoom of the map picture (15 = street level)"
-        default: "15"
+        description: "Highest zoom of the map picture (14 = street level; the map enlarges it beyond)"
+        default: "14"
 
 permissions:
   contents: write
@@ -41,7 +41,7 @@ jobs:
 
       - name: Build regions
         env:
-          MAXZOOM: ${{ github.event.inputs.maxzoom || '15' }}
+          MAXZOOM: ${{ github.event.inputs.maxzoom || '14' }}
         run: bash scripts/build.sh
 
       - name: Publish release

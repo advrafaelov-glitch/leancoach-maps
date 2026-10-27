@@ -7,6 +7,7 @@ import sys
 from datetime import datetime, timezone
 
 out, build, osm_date = sys.argv[1], sys.argv[2], sys.argv[3]
+maxzoom = int(os.environ.get('MAXZOOM', '14'))
 regions = json.load(open('regions.json', encoding='utf-8'))['regions']
 
 
@@ -27,7 +28,7 @@ manifest = {
     'created': now.isoformat(timespec='seconds'),
     'sources': {
         'roads': {'name': 'OpenStreetMap via Geofabrik (israel-and-palestine)', 'date': osm_date or None},
-        'tiles': {'name': 'Protomaps basemap daily build', 'build': build},
+        'tiles': {'name': 'Protomaps basemap daily build', 'build': build, 'maxzoom': maxzoom},
     },
     'attribution': '© OpenStreetMap contributors (ODbL) · Protomaps',
     'style': {'layers': info('layers.json'), 'assets': info('assets.zip'),
