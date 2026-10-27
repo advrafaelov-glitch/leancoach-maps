@@ -4,6 +4,7 @@
 #                  search, routing and curves
 #   <id>.pmtiles   the map picture (Protomaps basemap, OpenStreetMap) – MapLibre
 #   layers.json    map style layers (Protomaps "light", Hebrew labels)
+#   layers-dark.json  the same, "dark" (the app follows the phone's light / dark mode)
 #   assets.zip     fonts and sprites for the style, so the map works offline
 #   manifest.json  what the app reads: regions, files, sizes, sha256
 # Needs: osmium-tool, pmtiles, node, jq, curl, zip. Run from the repository root.
@@ -46,17 +47,18 @@ for id in $(jq -r '.regions[].id' regions.json); do
 done
 
 # --- 3. Style layers (Hebrew labels) and offline fonts and sprites.
-node scripts/layers.mjs > "$OUT/layers.json"
+node scripts/layers.mjs light > "$OUT/layers.json"
+node scripts/layers.mjs dark > "$OUT/layers-dark.json"
 rm -rf "$WORK/basemaps-assets"
 git clone --depth 1 https://github.com/protomaps/basemaps-assets "$WORK/basemaps-assets"
-# only the fonts the style uses (all Unicode ranges, Hebrew included) and the light sprites
-FONTS=$(jq -r '[.. | objects | ."text-font"? // empty | .. | strings | select(startswith("Noto Sans"))] | unique | .[]' "$OUT/layers.json")
+# only the fonts the style uses (all Unicode ranges, Hebrew included) and the light and dark sprites
+FONTS=$(jq -rs '[.. | objects | ."text-font"? // empty | .. | strings | select(startswith("Noto Sans"))] | unique | .[]' "$OUT/layers.json" "$OUT/layers-dark.json")
 ( cd "$WORK/basemaps-assets"
   args=()
   # a font the assets do not have (scripts we do not need, e.g. Devanagari) is skipped
   while IFS= read -r f; do if [ -d "fonts/$f" ]; then args+=("fonts/$f"); else echo "font not in assets, skipped: $f" >&2; fi; done <<< "$FONTS"
   ls fonts/"Noto Sans Regular"/1280-1535.pbf > /dev/null   # Hebrew glyphs
-  zip -qr "../../$OUT/assets.zip" "${args[@]}" sprites/v4/light* )
+  zip -qr "../../$OUT/assets.zip" "${args[@]}" sprites/v4/light* sprites/v4/dark* )
 
 # --- 4. Manifest.
 python3 scripts/manifest.py "$OUT" "$BUILD" "${OSM_DATE:-}" > "$OUT/manifest.json"

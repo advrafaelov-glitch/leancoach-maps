@@ -7,7 +7,7 @@
 | `<id>.osm.pbf` | כבישים ומקומות עם שם – חיפוש, ניווט ועיקולים במנוע | OpenStreetMap דרך Geofabrik |
 | `<id>.pmtiles` | תמונת המפה, שמורה בטלפון | Protomaps basemap (OpenStreetMap) |
 
-ובנוסף: `layers.json` (עיצוב המפה, שמות בעברית), `assets.zip` (גופנים וסמלים), `manifest.json` (רשימת האזורים, גדלים ו-sha256).
+ובנוסף: `layers.json` ו-`layers-dark.json` (עיצוב המפה בהיר וכהה, שמות בעברית), `assets.zip` (גופנים וסמלים), `manifest.json` (רשימת האזורים, גדלים ו-sha256).
 
 האזורים מוגדרים ב-`regions.json`. הבנייה: `.github/workflows/build-maps.yml`, פעם בחודש ובהפעלה ידנית (Actions → build-maps → Run workflow). כל בנייה מתפרסמת כ-Release; האפליקציה מורידה מ-`releases/latest/download/manifest.json`.
 

@@ -33,8 +33,8 @@ manifest = {
         'tiles': {'name': 'Protomaps basemap daily build', 'build': build, 'maxzoom': maxzoom},
     },
     'attribution': '© OpenStreetMap contributors (ODbL) · Protomaps',
-    'style': {'layers': info('layers.json'), 'assets': info('assets.zip'),
-              'glyphs': 'fonts/{fontstack}/{range}.pbf', 'sprite': 'sprites/v4/light'},
+    'style': {'layers': info('layers.json'), 'layers_dark': info('layers-dark.json'), 'assets': info('assets.zip'),
+              'glyphs': 'fonts/{fontstack}/{range}.pbf', 'sprite': 'sprites/v4/light', 'sprite_dark': 'sprites/v4/dark'},
     'regions': [
         {**{k: r[k] for k in ('id', 'name_he', 'name_en', 'bbox')},
          'roads': info(f"{r['id']}.osm.pbf"), 'tiles': info(f"{r['id']}.pmtiles")}
