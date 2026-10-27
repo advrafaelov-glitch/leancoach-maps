@@ -1,0 +1,10 @@
+{
+  "comment": "Map regions of the LeanCoach app. Bounding boxes are [west, south, east, north] in degrees and overlap by about 0.1 degree (10 km), so a road at a border is whole in both regions.",
+  "regions": [
+    { "id": "north",     "name_he": "צפון – גליל וגולן",            "name_en": "North – Galilee and Golan",     "bbox": [34.95, 32.70, 35.95, 33.45] },
+    { "id": "haifa",     "name_he": "חיפה והעמקים",                  "name_en": "Haifa and the valleys",         "bbox": [34.85, 32.30, 35.65, 32.90] },
+    { "id": "center",    "name_he": "מרכז ושרון",                    "name_en": "Center and Sharon",             "bbox": [34.60, 31.65, 35.10, 32.45] },
+    { "id": "jerusalem", "name_he": "ירושלים, יהודה ושומרון",        "name_en": "Jerusalem, Judea and Samaria",  "bbox": [34.95, 31.30, 35.60, 32.45] },
+    { "id": "south",     "name_he": "דרום – נגב ואילת",              "name_en": "South – Negev and Eilat",       "bbox": [34.20, 29.45, 35.50, 31.80] }
+  ]
+}

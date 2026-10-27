@@ -1,0 +1,55 @@
+name: build-maps
+
+# Builds the LeanCoach map regions and publishes them as a release. The app downloads
+# from releases/latest/download/<file>. Monthly, and by hand from the Actions tab.
+on:
+  schedule:
+    - cron: "17 3 1 * *"
+  workflow_dispatch:
+    inputs:
+      maxzoom:
+        description: "Highest zoom of the map picture (15 = street level)"
+        default: "15"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q osmium-tool jq zip
+          curl -fsSL -o /tmp/pmtiles.tar.gz \
+            "$(curl -fsSL https://api.github.com/repos/protomaps/go-pmtiles/releases/latest \
+               | jq -r '.assets[] | select(.name | test("Linux_x86_64.tar.gz$")) | .browser_download_url')"
+          sudo tar -xzf /tmp/pmtiles.tar.gz -C /usr/local/bin pmtiles
+          pmtiles version || true
+          osmium --version | head -1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Style package
+        run: npm install --no-save --no-audit --no-fund @protomaps/basemaps
+
+      - name: Build regions
+        env:
+          MAXZOOM: ${{ github.event.inputs.maxzoom || '15' }}
+        run: bash scripts/build.sh
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="maps-$(jq -r .release out/manifest.json)-${{ github.run_number }}"
+          gh release create "$TAG" out/* \
+            --title "Maps $(jq -r .release out/manifest.json)" \
+            --notes "LeanCoach map regions. $(jq -r .attribution out/manifest.json). Protomaps build $(jq -r .sources.tiles.build out/manifest.json)." \
+            --latest
