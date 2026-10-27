@@ -13,11 +13,13 @@ regions = json.load(open('regions.json', encoding='utf-8'))['regions']
 
 def info(name):
     path = os.path.join(out, name)
-    h = hashlib.sha256()
+    h, m = hashlib.sha256(), hashlib.md5()
     with open(path, 'rb') as f:
         for chunk in iter(lambda: f.read(1 << 20), b''):
             h.update(chunk)
-    return {'file': name, 'bytes': os.path.getsize(path), 'sha256': h.hexdigest()}
+            m.update(chunk)
+    # md5: the phone checks downloads with it (expo-file-system computes md5, not sha256)
+    return {'file': name, 'bytes': os.path.getsize(path), 'sha256': h.hexdigest(), 'md5': m.hexdigest()}
 
 
 now = datetime.now(timezone.utc)
