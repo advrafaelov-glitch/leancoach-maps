@@ -11,7 +11,7 @@
     { "id": "us-dragon",    "name_he": "זנב הדרקון US 129 – ארה\"ב",     "name_en": "Tail of the Dragon, US 129 (USA)",       "ref": "^US 129",        "bbox": [-84.02, 35.46, -83.92, 35.53] },
     { "id": "fr-turini",    "name_he": "קול דה טוריני – צרפת",            "name_en": "Col de Turini (France)",                 "ref": "^[DM] ?2566$",   "bbox": [7.33, 43.94, 7.42, 44.00] },
     { "id": "no-trollstigen", "name_he": "טרולסטיגן – נורווגיה",        "name_en": "Trollstigen (Norway)",                   "ref": "^(Fv ?)?63$",    "bbox": [7.63, 62.42, 7.71, 62.47] },
-    { "id": "at-grossglockner", "name_he": "גרוסגלוקנר – אוסטריה",      "name_en": "Grossglockner High Alpine Road (Austria)", "ref": "^B ?107$",     "bbox": [12.77, 47.05, 12.88, 47.14] },
+    { "id": "at-grossglockner", "name_he": "גרוסגלוקנר – אוסטריה",      "name_en": "Grossglockner High Alpine Road (Austria)", "ref": "^B ?107$", "name": "Gro(ß|ss)glockner",     "bbox": [12.77, 47.05, 12.88, 47.14] },
     { "id": "es-sa-calobra", "name_he": "סה קלוברה – מיורקה",           "name_en": "Sa Calobra Ma-2141 (Mallorca)",          "ref": "^Ma-2141$",      "bbox": [2.78, 39.82, 2.87, 39.87] },
     { "id": "im-snaefell",  "name_he": "דרך ההר A18 – האי מאן",          "name_en": "Snaefell Mountain Road A18 (Isle of Man)", "ref": "^A18$",       "bbox": [-4.50, 54.19, -4.35, 54.30] }
   ]

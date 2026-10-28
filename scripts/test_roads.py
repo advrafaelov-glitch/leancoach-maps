@@ -1,5 +1,5 @@
 """Builds the test roads into out-test/: for each road of test-roads.json, its OSM ways
-(roads with the given ref inside the bbox) as <id>.kml, a small map picture <id>.pmtiles
+(roads with the given ref - or name, when given - inside the bbox) as <id>.kml, a small map picture <id>.pmtiles
 (the bbox, from the Protomaps build), and test-roads.json (what the app reads: names,
 bbox, files, sizes, md5, ways and km found). A road with no ways is listed with
 "ways": 0 and no files, so a wrong ref or bbox shows in the manifest.
@@ -44,7 +44,8 @@ def info(name):
 listed = []
 for r in roads:
     w, s, e, n = r['bbox']
-    q = f'[out:json][timeout:120];way["highway"]["ref"~"{r["ref"]}"]({s},{w},{n},{e});out geom;'
+    by_name = f'way["highway"]["name"~"{r["name"]}"]({s},{w},{n},{e});' if r.get('name') else ''
+    q = f'[out:json][timeout:120];(way["highway"]["ref"~"{r["ref"]}"]({s},{w},{n},{e});{by_name});out geom;'
     print(f"{r['id']}: {q}", flush=True)
     ways = [x for x in overpass(q).get('elements', []) if x.get('type') == 'way' and x.get('geometry')]
     entry = {k: r[k] for k in ('id', 'name_he', 'name_en', 'bbox')}
