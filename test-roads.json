@@ -1,0 +1,18 @@
+{
+  "comment": "Test roads for marking where curves end (LeanCoach curve test bench). Each road: the OSM ways with a matching ref inside the bbox [west, south, east, north]. Built by .github/workflows/build-test-roads.yml into the release 'test-roads' (not 'latest', which is the Israel map).",
+  "roads": [
+    { "id": "il-395",       "name_he": "כביש 395 – שורק",                "name_en": "Route 395, Sorek valley (Israel)",       "ref": "^395$",          "bbox": [34.98, 31.72, 35.17, 31.80] },
+    { "id": "il-89",        "name_he": "כביש 89 – צפת–מירון",            "name_en": "Route 89, Safed–Meron (Israel)",         "ref": "^89$",           "bbox": [35.40, 32.95, 35.52, 33.01] },
+    { "id": "il-386",       "name_he": "כביש 386 – הרי ירושלים",          "name_en": "Route 386, Jerusalem hills (Israel)",    "ref": "^386$",          "bbox": [35.05, 31.72, 35.17, 31.80] },
+    { "id": "il-40-ramon",  "name_he": "כביש 40 – מעלה מכתש רמון",        "name_en": "Route 40, Ramon crater (Israel)",        "ref": "^40$",           "bbox": [34.76, 30.52, 34.88, 30.62] },
+    { "id": "il-227",       "name_he": "כביש 227 – מעלה עקרבים",         "name_en": "Route 227, Scorpion Pass (Israel)",      "ref": "^227$",          "bbox": [35.14, 30.90, 35.26, 31.00] },
+    { "id": "it-stelvio",   "name_he": "מעבר סטלביו – איטליה",           "name_en": "Stelvio Pass SS38 (Italy)",              "ref": "^SS ?38$",       "bbox": [10.38, 46.49, 10.51, 46.56] },
+    { "id": "ro-transfagarasan", "name_he": "טרנספגרשן – רומניה",      "name_en": "Transfăgărășan DN7C (Romania)",          "ref": "^DN ?7C$",       "bbox": [24.54, 45.55, 24.67, 45.70] },
+    { "id": "us-dragon",    "name_he": "זנב הדרקון US 129 – ארה\"ב",     "name_en": "Tail of the Dragon, US 129 (USA)",       "ref": "^US 129",        "bbox": [-84.02, 35.46, -83.92, 35.53] },
+    { "id": "fr-turini",    "name_he": "קול דה טוריני – צרפת",            "name_en": "Col de Turini (France)",                 "ref": "^[DM] ?2566$",   "bbox": [7.33, 43.94, 7.42, 44.00] },
+    { "id": "no-trollstigen", "name_he": "טרולסטיגן – נורווגיה",        "name_en": "Trollstigen (Norway)",                   "ref": "^(Fv ?)?63$",    "bbox": [7.63, 62.42, 7.71, 62.47] },
+    { "id": "at-grossglockner", "name_he": "גרוסגלוקנר – אוסטריה",      "name_en": "Grossglockner High Alpine Road (Austria)", "ref": "^B ?107$",     "bbox": [12.77, 47.05, 12.88, 47.14] },
+    { "id": "es-sa-calobra", "name_he": "סה קלוברה – מיורקה",           "name_en": "Sa Calobra Ma-2141 (Mallorca)",          "ref": "^Ma-2141$",      "bbox": [2.78, 39.82, 2.87, 39.87] },
+    { "id": "im-snaefell",  "name_he": "דרך ההר A18 – האי מאן",          "name_en": "Snaefell Mountain Road A18 (Isle of Man)", "ref": "^A18$",       "bbox": [-4.50, 54.19, -4.35, 54.30] }
+  ]
+}

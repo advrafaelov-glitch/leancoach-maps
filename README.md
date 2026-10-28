@@ -11,6 +11,10 @@
 
 האזורים מוגדרים ב-`regions.json`. הבנייה: `.github/workflows/build-maps.yml`, פעם בחודש ובהפעלה ידנית (Actions → build-maps → Run workflow). כל בנייה מתפרסמת כ-Release; האפליקציה מורידה מ-`releases/latest/download/manifest.json`.
 
+## כבישי בדיקה
+
+`test-roads.json`: כבישים בארץ ובעולם לסימון סוף עיקולים (ספסל הבדיקה באפליקציה). לכל כביש: הקטעים שלו מ‑OpenStreetMap כ‑`<id>.kml` ותמונת מפה קטנה `<id>.pmtiles`. הבנייה: `.github/workflows/build-test-roads.yml` (בכל שינוי ברשימה, או ידנית), ל‑Release בשם `test-roads` – לא latest, כדי לא לגעת במפות של ישראל.
+
 ## רישיון
 
 הנתונים © OpenStreetMap contributors, ברישיון [ODbL](https://opendatacommons.org/licenses/odbl/). תמונת המפה: [Protomaps](https://protomaps.com) basemap, יצירה נגזרת של OpenStreetMap ב-ODbL. יש לציין "© OpenStreetMap contributors" בכל מקום שהמפה מוצגת.

@@ -1,0 +1,48 @@
+name: build-test-roads
+
+# Test roads for the LeanCoach curve test bench (test-roads.json): each road's OSM ways
+# as KML and a small map picture. Published to the release "test-roads" - never marked
+# latest, so the app's Israel maps (releases/latest) are not touched.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - test-roads.json
+      - scripts/test_roads.py
+      - .github/workflows/build-test-roads.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tools
+        run: |
+          curl -fsSL -o /tmp/pmtiles.tar.gz \
+            "$(curl -fsSL https://api.github.com/repos/protomaps/go-pmtiles/releases/latest \
+               | jq -r '.assets[] | select(.name | test("Linux_x86_64.tar.gz$")) | .browser_download_url')"
+          sudo tar -xzf /tmp/pmtiles.tar.gz -C /usr/local/bin pmtiles
+
+      - name: Build test roads
+        run: |
+          BUILD=""
+          for days in 0 1 2 3 4 5 6 7; do
+            d=$(date -u -d "-$days day" +%Y%m%d)
+            if curl -fsI "https://build.protomaps.com/$d.pmtiles" > /dev/null; then BUILD=$d; break; fi
+          done
+          [ -n "$BUILD" ] || { echo "no Protomaps build in the last 8 days" >&2; exit 1; }
+          python3 scripts/test_roads.py "$BUILD"
+
+      - name: Publish release test-roads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete test-roads --yes --cleanup-tag || true
+          gh release create test-roads out-test/* --title "Test roads" \
+            --notes "Roads for marking where curves end (LeanCoach curve test bench). © OpenStreetMap contributors (ODbL) · Protomaps." \
+            --latest=false
