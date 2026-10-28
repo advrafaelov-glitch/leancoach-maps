@@ -76,3 +76,7 @@ json.dump({'format': 'leancoach-test-roads', 'version': 1, 'created': time.strft
            'attribution': '© OpenStreetMap contributors (ODbL) · Protomaps', 'tiles_build': build, 'roads': listed},
           open(os.path.join(OUT, 'test-roads.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 print(json.dumps([(x['id'], x['ways'], x['km']) for x in listed]))
+# Overpass down for most roads: do not replace a good release with an empty one
+built = sum(1 for x in listed if x['ways'] > 0)
+if built < len(listed) // 2:
+    sys.exit(f'only {built} of {len(listed)} roads built - not publishing')
