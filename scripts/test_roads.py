@@ -47,8 +47,13 @@ for r in roads:
     by_name = f'way["highway"]["name"~"{r["name"]}"]({s},{w},{n},{e});' if r.get('name') else ''
     q = f'[out:json][timeout:120];(way["highway"]["ref"~"{r["ref"]}"]({s},{w},{n},{e});{by_name});out geom;'
     print(f"{r['id']}: {q}", flush=True)
-    ways = [x for x in overpass(q).get('elements', []) if x.get('type') == 'way' and x.get('geometry')]
     entry = {k: r[k] for k in ('id', 'name_he', 'name_en', 'bbox')}
+    try:
+        ways = [x for x in overpass(q).get('elements', []) if x.get('type') == 'way' and x.get('geometry')]
+    except Exception as e:  # one road failing must not stop the others
+        print(f'  failed: {e}', flush=True)
+        entry['error'] = str(e)
+        ways = []
     entry['ways'] = len(ways)
     entry['km'] = round(sum(km(x['geometry']) for x in ways), 1)
     print(f"  {len(ways)} ways, {entry['km']} km", flush=True)
