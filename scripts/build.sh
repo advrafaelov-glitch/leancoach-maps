@@ -24,14 +24,19 @@ fi
 OSM_DATE=$(osmium fileinfo -g header.option.osmosis_replication_timestamp "$WORK/country.osm.pbf" || true)
 echo "OSM data: ${OSM_DATE:-unknown date}"
 
-# Only what the engine reads: roads, and named nodes (places, tourism, amenities, nature).
+# Only what the engine reads: roads; places to search for - named points (places,
+# tourism, sites, amenities, parks, shops, nature) and named areas (a site drawn as an
+# outline, e.g. the Western Wall; malls, parks); town borders (which town a street is in).
 osmium tags-filter --overwrite -o "$WORK/roads.osm.pbf" "$WORK/country.osm.pbf" \
-  w/highway n/place n/tourism n/amenity n/natural
+  w/highway n/place n/tourism n/amenity n/natural n/historic n/leisure n/shop \
+  w/tourism w/historic w/amenity w/leisure w/shop \
+  r/admin_level=7,8
 
-# All regions in one pass; complete ways: a road crossing a border is whole in each region.
+# All regions in one pass; complete ways: a road crossing a border is whole in each region,
+# and so is a town border (boundary relations completed).
 jq '{directory: "'"$OUT"'", extracts: [.regions[] | {output: (.id + ".osm.pbf"), bbox: .bbox}]}' regions.json \
   > "$WORK/extracts.json"
-osmium extract --overwrite --strategy complete_ways -c "$WORK/extracts.json" "$WORK/roads.osm.pbf"
+osmium extract --overwrite --strategy smart -S types=multipolygon,boundary -c "$WORK/extracts.json" "$WORK/roads.osm.pbf"
 
 # --- 2. Map picture: cut each region from the latest Protomaps daily build.
 BUILD=""
