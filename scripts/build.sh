@@ -26,17 +26,25 @@ echo "OSM data: ${OSM_DATE:-unknown date}"
 
 # Only what the engine reads: roads; places to search for - named points (places,
 # tourism, sites, amenities, parks, shops, nature) and named areas (a site drawn as an
-# outline, e.g. the Western Wall; malls, parks); town borders (which town a street is in).
+# outline, e.g. the Western Wall; malls, parks).
 osmium tags-filter --overwrite -o "$WORK/roads.osm.pbf" "$WORK/country.osm.pbf" \
   w/highway n/place n/tourism n/amenity n/natural n/historic n/leisure n/shop \
-  w/tourism w/historic w/amenity w/leisure w/shop \
-  r/admin_level=7,8
+  w/tourism w/historic w/amenity w/leisure w/shop
+# Town borders (which town a street is in), by themselves: a small file.
+osmium tags-filter --overwrite -o "$WORK/towns.osm.pbf" "$WORK/country.osm.pbf" r/admin_level=7,8
 
-# All regions in one pass; complete ways: a road crossing a border is whole in each region,
-# and so is a town border (boundary relations completed).
-jq '{directory: "'"$OUT"'", extracts: [.regions[] | {output: (.id + ".osm.pbf"), bbox: .bbox}]}' regions.json \
-  > "$WORK/extracts.json"
-osmium extract --overwrite --strategy smart -S types=multipolygon,boundary -c "$WORK/extracts.json" "$WORK/roads.osm.pbf"
+# One region at a time (all in one pass needs ~3.6 GB per region - more than the build
+# machine has for five since OpenStreetMap's node numbers grew). Complete ways: a road
+# crossing a border is whole in each region. The town borders of each region whole too
+# (a border crossing the region's edge), merged into the region's file.
+mkdir -p "$WORK/towns"
+for id in $(jq -r '.regions[].id' regions.json); do
+  bbox=$(jq -r --arg id "$id" '.regions[] | select(.id == $id) | .bbox | map(tostring) | join(",")' regions.json)
+  osmium extract --overwrite --strategy complete_ways -b "$bbox" -o "$WORK/$id.roads.osm.pbf" "$WORK/roads.osm.pbf"
+  osmium extract --overwrite --strategy smart -S types=boundary -b "$bbox" -o "$WORK/towns/$id.osm.pbf" "$WORK/towns.osm.pbf"
+  osmium merge --overwrite -o "$OUT/$id.osm.pbf" "$WORK/$id.roads.osm.pbf" "$WORK/towns/$id.osm.pbf"
+  rm -f "$WORK/$id.roads.osm.pbf"
+done
 
 # --- 2. Map picture: cut each region from the latest Protomaps daily build.
 BUILD=""
