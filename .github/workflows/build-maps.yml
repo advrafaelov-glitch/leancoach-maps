@@ -39,6 +39,23 @@ jobs:
       - name: Style package
         run: npm install --no-save --no-audit --no-fund @protomaps/basemaps
 
+      # the OpenStreetMap part of the build, step by step (a step that fails or is killed
+      # shows by its name on the run's page)
+      - name: OSM download
+        run: mkdir -p work && curl -fL --retry 3 -o work/country.osm.pbf https://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf && ls -la work
+      - name: OSM filter
+        run: |
+          osmium tags-filter --overwrite -o work/roads.osm.pbf work/country.osm.pbf \
+            w/highway n/place n/tourism n/amenity n/natural n/historic n/leisure n/shop \
+            w/tourism w/historic w/amenity w/leisure w/shop r/admin_level=7,8
+          ls -la work; free -m
+      - name: OSM extract (check)
+        run: |
+          mkdir -p check
+          jq '{directory: "check", extracts: [.regions[] | {output: (.id + ".osm.pbf"), bbox: .bbox}]}' regions.json > work/x.json
+          osmium extract --overwrite --strategy smart -S types=multipolygon,boundary -c work/x.json work/roads.osm.pbf
+          ls -la check; free -m
+
       - name: Build regions
         env:
           MAXZOOM: ${{ github.event.inputs.maxzoom || '14' }}
