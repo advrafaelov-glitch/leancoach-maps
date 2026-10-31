@@ -31,13 +31,18 @@ manifest = {
     'sources': {
         'roads': {'name': 'OpenStreetMap via Geofabrik (israel-and-palestine)', 'date': osm_date or None},
         'tiles': {'name': 'Protomaps basemap daily build', 'build': build, 'maxzoom': maxzoom},
+        'terrain': {'name': 'Mapterhorn planet (Terrarium)', 'maxzoom': int(os.environ.get('TERRAIN_ZOOM', '12'))},
     },
     'attribution': '© OpenStreetMap contributors (ODbL) · Protomaps',
+    'terrain_attribution': 'Terrain: Mapterhorn (see terrain-attribution.json)',
+    'terrain_credits': info('terrain-attribution.json'),
     'style': {'layers': info('layers.json'), 'layers_dark': info('layers-dark.json'), 'assets': info('assets.zip'),
               'glyphs': 'fonts/{fontstack}/{range}.pbf', 'sprite': 'sprites/v4/light', 'sprite_dark': 'sprites/v4/dark'},
     'regions': [
         {**{k: r[k] for k in ('id', 'name_he', 'name_en', 'bbox')},
-         'roads': info(f"{r['id']}.osm.pbf"), 'tiles': info(f"{r['id']}.pmtiles")}
+         'roads': info(f"{r['id']}.osm.pbf"), 'tiles': info(f"{r['id']}.pmtiles"),
+         # elevation for the hillshade (apps from 2026-11 on; older apps ignore it)
+         'terrain': info(f"{r['id']}.terrain.pmtiles")}
         for r in regions
     ],
 }

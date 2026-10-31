@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | `<id>.osm.pbf` | כבישים ומקומות עם שם – חיפוש, ניווט ועיקולים במנוע | OpenStreetMap דרך Geofabrik |
 | `<id>.pmtiles` | תמונת המפה, שמורה בטלפון | Protomaps basemap (OpenStreetMap) |
+| `<id>.terrain.pmtiles` | גובה פני השטח – התבליט (hillshade) במפה | [Mapterhorn](https://mapterhorn.com) (בישראל מודל ארצי 10 מ', בשאר Copernicus GLO-30); המקורות והקרדיטים ב-`terrain-attribution.json` |
 
 ובנוסף: `layers.json` ו-`layers-dark.json` (עיצוב המפה בהיר וכהה, שמות בעברית), `assets.zip` (גופנים וסמלים), `manifest.json` (רשימת האזורים, גדלים ו-sha256).
 

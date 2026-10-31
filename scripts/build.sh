@@ -6,6 +6,8 @@
 #   layers.json    map style layers (Protomaps "light", Hebrew labels)
 #   layers-dark.json  the same, "dark" (the app follows the phone's light / dark mode)
 #   assets.zip     fonts and sprites for the style, so the map works offline
+#   <id>.terrain.pmtiles  elevation (Mapterhorn, Terrarium) - the hillshade
+#   terrain-attribution.json  the elevation data's sources and credits
 #   manifest.json  what the app reads: regions, files, sizes, sha256
 # Needs: osmium-tool, pmtiles, node, jq, curl, zip. Run from the repository root.
 set -euo pipefail
@@ -57,6 +59,18 @@ echo "Protomaps build: $BUILD"
 for id in $(jq -r '.regions[].id' regions.json); do
   bbox=$(jq -r --arg id "$id" '.regions[] | select(.id == $id) | .bbox | map(tostring) | join(",")' regions.json)
   pmtiles extract "https://build.protomaps.com/$BUILD.pmtiles" "$OUT/$id.pmtiles" --bbox="$bbox" --maxzoom="$MAXZOOM"
+done
+
+# --- 2b. Terrain (elevation) for the hillshade: cut each region from Mapterhorn's
+#         planet file (Terrarium-encoded WebP, 512 px, zoom 0-12; Israel from a
+#         country-wide 10 m model, the rest from Copernicus GLO-30). Its credits as they
+#         publish them, kept with the release.
+TERRAIN=https://download.mapterhorn.com/planet.pmtiles
+TERRAIN_ZOOM=${TERRAIN_ZOOM:-12}
+curl -fsSL --retry 3 -o "$OUT/terrain-attribution.json" https://download.mapterhorn.com/attribution.json
+for id in $(jq -r '.regions[].id' regions.json); do
+  bbox=$(jq -r --arg id "$id" '.regions[] | select(.id == $id) | .bbox | map(tostring) | join(",")' regions.json)
+  pmtiles extract "$TERRAIN" "$OUT/$id.terrain.pmtiles" --bbox="$bbox" --maxzoom="$TERRAIN_ZOOM"
 done
 
 # --- 3. Style layers (Hebrew labels) and offline fonts and sprites.
