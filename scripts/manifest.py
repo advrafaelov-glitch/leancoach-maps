@@ -34,7 +34,7 @@ manifest = {
         'terrain': {'name': 'Mapterhorn planet (Terrarium)', 'maxzoom': int(os.environ.get('TERRAIN_ZOOM', '12'))},
     },
     'attribution': '© OpenStreetMap contributors (ODbL) · Protomaps',
-    'terrain_attribution': 'Terrain: Mapterhorn (see terrain-attribution.json)',
+    'terrain_attribution': 'Terrain: Mapterhorn · ASTER GDEM courtesy of METI and NASA, processed by 4cast LTD · produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved',
     'terrain_credits': info('terrain-attribution.json'),
     'style': {'layers': info('layers.json'), 'layers_dark': info('layers-dark.json'), 'assets': info('assets.zip'),
               'glyphs': 'fonts/{fontstack}/{range}.pbf', 'sprite': 'sprites/v4/light', 'sprite_dark': 'sprites/v4/dark'},
