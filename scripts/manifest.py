@@ -7,7 +7,7 @@ import sys
 from datetime import datetime, timezone
 
 out, build, osm_date = sys.argv[1], sys.argv[2], sys.argv[3]
-maxzoom = int(os.environ.get('MAXZOOM', '14'))
+maxzoom = int(os.environ.get('MAXZOOM', '15'))
 regions = json.load(open('regions.json', encoding='utf-8'))['regions']
 
 

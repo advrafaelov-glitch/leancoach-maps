@@ -8,8 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       maxzoom:
-        description: "Highest zoom of the map picture (14 = street level; the map enlarges it beyond)"
-        default: "14"
+        description: "Highest zoom of the map picture (15 = the most Protomaps has: buildings, more names close up; the map enlarges it beyond)"
+        default: "15"
+      publish:
+        description: "Publish as the latest release (no: only list the file sizes)"
+        default: "yes"
 
 permissions:
   contents: write
@@ -41,7 +44,7 @@ jobs:
 
       - name: Build regions
         env:
-          MAXZOOM: ${{ github.event.inputs.maxzoom || '14' }}
+          MAXZOOM: ${{ github.event.inputs.maxzoom || '15' }}
         # the last lines of a failed build as an annotation (readable from the run's page / API)
         run: |
           set -o pipefail
@@ -50,7 +53,13 @@ jobs:
             exit 1
           fi
 
+      - name: Sizes
+        run: |
+          ls -la out | tee sizes.txt
+          echo "::notice title=sizes::$(awk 'NR>1 {printf "%s %.1fMB | ", $9, $5/1048576}' sizes.txt)"
+
       - name: Publish release
+        if: ${{ github.event.inputs.publish != 'no' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
