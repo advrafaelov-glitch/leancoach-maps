@@ -9,6 +9,7 @@ on:
     paths:
       - test-roads.json
       - scripts/test_roads.py
+      - scripts/test_roads_check.py
       - .github/workflows/build-test-roads.yml
 
 permissions:
@@ -17,7 +18,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
 
@@ -36,6 +37,7 @@ jobs:
             if curl -fsI "https://build.protomaps.com/$d.pmtiles" > /dev/null; then BUILD=$d; break; fi
           done
           [ -n "$BUILD" ] || { echo "no Protomaps build in the last 8 days" >&2; exit 1; }
+          python3 scripts/test_roads_check.py
           python3 scripts/test_roads.py "$BUILD"
 
       - name: Publish release test-roads

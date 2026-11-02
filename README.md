@@ -16,6 +16,8 @@
 
 `test-roads.json`: כבישים בארץ ובעולם לסימון סוף עיקולים (ספסל הבדיקה באפליקציה). לכל כביש: הקטעים שלו מ‑OpenStreetMap כ‑`<id>.kml` ותמונת מפה קטנה `<id>.pmtiles`. הבנייה: `.github/workflows/build-test-roads.yml` (בכל שינוי ברשימה, או ידנית), ל‑Release בשם `test-roads` – לא latest, כדי לא לגעת במפות של ישראל.
 
+כבישים מומלצים (3.11.2026): ב‑`test-roads.json` כביש עם `"recommended": true` הוא גם ברשימת "כבישים מומלצים" לרוכבים (בשתי האפליקציות). ברשימה שנבנית יש לו גם `line` (הקטעים בתוך התיבה כקו אחד, מפושט ל‑20 מ', עד 400 נקודות) ו‑`ends` (שני קצותיו), ו‑`curves` / `length_km` מהניתוח של 2.11.2026. בדיקה בלי רשת: `python3 scripts/test_roads_check.py`.
+
 ## רישיון
 
 הנתונים © OpenStreetMap contributors, ברישיון [ODbL](https://opendatacommons.org/licenses/odbl/). תמונת המפה: [Protomaps](https://protomaps.com) basemap, יצירה נגזרת של OpenStreetMap ב-ODbL. יש לציין "© OpenStreetMap contributors" בכל מקום שהמפה מוצגת.
